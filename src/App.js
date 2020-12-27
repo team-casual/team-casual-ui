@@ -1,4 +1,5 @@
 import logo from './logo.svg';
+import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
 import './App.css';
 
 function App() {
@@ -9,9 +10,19 @@ function App() {
         <p>
           Team Casual
         </p>
-        </header>
+      </header>
+      <AmplifySignOut />
     </div>
   );
 }
 
-export default App;
+export default withAuthenticator(
+  App,
+  {
+    signUpConfig: {
+      signUpFields: [
+        { key: "preferred_username", required: true }
+      ]
+    }
+  }
+);
