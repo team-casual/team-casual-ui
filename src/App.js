@@ -16,13 +16,4 @@ function App() {
   );
 }
 
-export default withAuthenticator(
-  App,
-  {
-    signUpConfig: {
-      signUpFields: [
-        { key: "preferred_username", required: true }
-      ]
-    }
-  }
-);
+export default withAuthenticator(App);

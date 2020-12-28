@@ -1,25 +1,24 @@
 {
     "identityPoolName": "testAuthIdentityPool",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "teamca738a65bc",
+    "resourceNameTruncated": "teamca9d170b9c",
     "userPoolName": "teamcasualui",
     "autoVerifiedAttributes": [
-        "phone_number"
+        "email"
     ],
     "mfaConfiguration": "OFF",
     "mfaTypes": [
         "SMS Text Message"
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
-    "smsVerificationMessage": "Forgot password code: {####}",
-    "emailVerificationSubject": "Your verification code",
-    "emailVerificationMessage": "Your verification code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Forgot password code: {####}",
+    "emailVerificationMessage": "Forgot password code: {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [
         "Requires Lowercase",
         "Requires Numbers",
-        "Requires Uppercase",
         "Requires Uppercase"
     ],
     "requiredAttributes": [
@@ -33,9 +32,9 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "teamca738a65bc_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "teamca9d170b9c_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "738a65bc",
+    "sharedId": "9d170b9c",
     "resourceName": "teamcasualui",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
@@ -59,7 +58,7 @@
     "userPoolGroupList": [],
     "adminQueries": false,
     "thirdPartyAuth": false,
+    "authProviders": [],
     "usernameCaseSensitive": false,
-    "dependsOn": [],
-    "hostedUI": false
+    "dependsOn": []
 }
