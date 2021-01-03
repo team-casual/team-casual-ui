@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import { Auth, Hub } from "aws-amplify";
 
 import SiteNav from './components/navigation/SiteNav';
 import Login from "./views/Login/Login";
@@ -8,12 +9,30 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const userResponse = await Auth.currentUserInfo();
+        setUser(userResponse);
+      }
+      catch (error) {
+        setUser(null);
+      }
+    }
+
+    getUser();
+
+    Hub.listen("auth", getUser, "App");
+  }, []);
+
   return (
     <>
       <Router>
         <Row>
           <Col>
-            <SiteNav />
+            <SiteNav user={user} />
           </Col>
         </Row>
 
@@ -24,13 +43,14 @@ function App() {
                 <header className="App-header">
                   <img src={logo} className="App-logo" alt="logo" />
                   <p>
-                    Team Casual
+                    Team Casual<br />
+                    {user !== null && <small>Welcome {user.attributes.email}</small>}
                   </p>
                 </header>
               </Route>
 
               <Route exact path="/login">
-                <Login />
+                {user !== null ? <Redirect to="/" /> : <Login user={user} />}
               </Route>
 
               <Route exact path="/minecraft">

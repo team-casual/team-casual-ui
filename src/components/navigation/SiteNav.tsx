@@ -1,30 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 
-import { SignOut } from 'aws-amplify-react';
-import { Auth, Hub } from "aws-amplify";
+import CustomSignOut from "../auth/CustomSignOut/CustomSignOut";
+//import { SignOut } from 'aws-amplify-react';
 
-const SiteNav = () => {
-    const [user, setUser] = useState<any>();
+export interface SiteNavProps {
+    user: any
+}
 
-    useEffect(() => {
-        const getUser = async () => {
-            try {
-                const userResponse = await Auth.currentUserInfo();
-                setUser(userResponse);
-            }
-            catch (error) {
-                setUser(null);
-            }
-        }
-
-        Hub.listen("auth", getUser, "SiteNav");
-    }, []);
-
+const SiteNav = (props: SiteNavProps) => {
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Navbar.Brand>
@@ -45,16 +33,16 @@ const SiteNav = () => {
                 </Nav>
 
                 <Nav>
-                    {user === null &&
+                    {props.user === null &&
                         <LinkContainer to="/Login">
                             <Nav.Link>
                                 <FontAwesomeIcon icon={faSignInAlt} /> Login
-                        </Nav.Link>
+                            </Nav.Link>
                         </LinkContainer>
                     }
 
-                    {user !== null &&
-                        <SignOut />
+                    {props.user !== null &&
+                        <CustomSignOut />
                     }
                 </Nav>
             </Navbar.Collapse>
