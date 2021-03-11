@@ -30,6 +30,10 @@ const SiteNav = (props: SiteNavProps) => {
                     <LinkContainer to="/Minecraft">
                         <Nav.Link>Minecraft</Nav.Link>
                     </LinkContainer>
+
+                    <LinkContainer to="/DnD">
+                        <Nav.Link>DnD</Nav.Link>
+                    </LinkContainer>
                 </Nav>
 
                 <Nav>
