@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Auth } from "aws-amplify";
 import { IAuthenticatorProps } from "aws-amplify-react/lib-esm/Auth/Authenticator";
+import { Container, Row, Col, Card } from "react-bootstrap";
 
+import "./CustomSignIn.scss";
 
 export const CustomSignIn = (props: IAuthenticatorProps) => {
     const [username, setUsername] = useState<string>("");
@@ -32,18 +34,40 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
     else {
 
         return (
-            <>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    onChange={e => setUsername(e.target.value)} />
+            <Container className="h-100 text-center">
+                <Card>
+                    <Card.Header>
+                        Sign In
+                    </Card.Header>
+                    <Card.Body>
 
-                <input
-                    type="password"
-                    onChange={e => setPassword(e.target.value)} />
+                        <Row className="m-3">
+                            <Col>
+                                <input
+                                    className="w-25"
+                                    type="text"
+                                    placeholder="Username"
+                                    onChange={e => setUsername(e.target.value)} />
+                            </Col>
+                        </Row>
 
-                <button type="button" onClick={() => signIn(username, password)}>Sign In</button>
-            </>
+                        <Row className="m-3">
+                            <Col>
+                                <input
+                                    className="w-25"
+                                    type="password"
+                                    onChange={e => setPassword(e.target.value)} />
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col>
+                                <button className="w-25" type="button" onClick={() => signIn(username, password)}>Sign In</button>
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                </Card>
+            </Container>
         );
     }
 }
