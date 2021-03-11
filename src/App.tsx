@@ -30,27 +30,40 @@ function App() {
   return (
     <>
       <Router>
-        <Row>
-          <Col>
-            <SiteNav user={user} />
-          </Col>
-        </Row>
+        {user !== null &&
+          <Row>
+            <Col>
+              <SiteNav user={user} />
+            </Col>
+          </Row>
+        }
 
         <Row>
           <Col>
             <Switch>
               <Route exact path="/">
-                <header className="App-header">
-                  <img src={logo} className="App-logo" alt="logo" />
-                  <p>
-                    Team Casual<br />
-                    {user !== null && <small>Welcome {user.attributes.email}</small>}
-                  </p>
-                </header>
+                {user === null &&
+                  <Redirect to="/login" />
+                }
+                {user !== null &&
+                  <header className="App-header">
+                    <img src={logo} className="App-logo" alt="logo" />
+                    <p>
+                      Team Casual<br />
+                      <small>Welcome {user.attributes.email}</small>
+                    </p>
+                  </header>
+                }
               </Route>
 
               <Route exact path="/login">
-                {user !== null ? <Redirect to="/" /> : <Login user={user} />}
+                {user !== null ?
+                  <Redirect to="/" /> : <Login user={user} />
+                }
+              </Route>
+
+              <Route exact path="/dnd">
+                <div>DnD</div>
               </Route>
 
               <Route exact path="/minecraft">
