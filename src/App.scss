@@ -31,15 +31,21 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 768px) {
   .App-header {
     font-size: unset;
     flex-direction: column;
     text-align: center;
   }
+}
+
+.login {
+  height: 100vh;
+  background-color: #282c34;
 }

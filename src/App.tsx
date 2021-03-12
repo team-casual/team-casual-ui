@@ -6,7 +6,7 @@ import { Auth, Hub } from "aws-amplify";
 import SiteNav from './components/navigation/SiteNav';
 import Login from "./views/Login/Login";
 import logo from './logo.svg';
-import './App.css';
+import './App.scss';
 
 function App() {
   const [user, setUser] = useState<any>(null);
@@ -57,9 +57,11 @@ function App() {
               </Route>
 
               <Route exact path="/login">
-                {user !== null ?
-                  <Redirect to="/" /> : <Login user={user} />
-                }
+                <div className="login">
+                  {user !== null ?
+                    <Redirect to="/" /> : <Login user={user} />
+                  }
+                </div>
               </Route>
 
               <Route exact path="/dnd">
