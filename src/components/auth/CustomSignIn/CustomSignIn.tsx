@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Auth } from "aws-amplify";
 import { IAuthenticatorProps } from "aws-amplify-react/lib-esm/Auth/Authenticator";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Card, InputGroup, FormControl } from "react-bootstrap";
 
 import logo from '../../../logo.svg';
 
@@ -38,41 +38,40 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
         return (
             <Container className="signInContainer">
                 <Row className="text-center">
-                    <Col lg="3" sm="12"></Col>
+                    <Col lg="2" sm="12"></Col>
                     <Col lg="3" sm="12" className="signInTitleContainer">
-                        <img className="signInLogo" src={logo} alt="Team Casual Logo"/>
+                        <img className="signInLogo" src={logo} alt="Team Casual Logo" />
                     </Col>
 
                     <Col lg="3" sm="12" className="signInTitleContainer">
                         <h2 className="text-white text-center">Team Casual</h2>
                     </Col>
                 </Row>
-                
+
                 <Row>
                     <Col lg="3" sm="12"></Col>
                     <Col lg="6" sm="12">
                         <Card className="signInCard">
-                            <Card.Header className="signInCardHeader">
-                                Login
-                            </Card.Header>
-
                             <Card.Body className="signInCardBody">
-                                <Row className="mb-3">
+                                <Row>
                                     <Col>
-                                        <input
-                                            className="w-100"
-                                            type="text"
-                                            placeholder="Username"
-                                            onChange={e => setUsername(e.target.value)} />
-                                    </Col>
-                                </Row>
+                                        <label htmlFor="email">Email</label>
+                                        <InputGroup className="mb-3">
+                                            <FormControl
+                                                id="email"
+                                                type="email"
+                                                placeholder="Enter your email address"
+                                                onChange={e => setUsername(e.target.value)} />
+                                        </InputGroup>
 
-                                <Row className="mb-3">
-                                    <Col>
-                                        <input
-                                            className="w-100"
-                                            type="password"
-                                            onChange={e => setPassword(e.target.value)} />
+                                        <label htmlFor="email">Password</label>
+                                        <InputGroup className="mb-3">
+                                            <FormControl
+                                                id="email"
+                                                type="password"
+                                                placeholder="Enter your password"
+                                                onChange={e => setPassword(e.target.value)} />
+                                        </InputGroup>
                                     </Col>
                                 </Row>
 
