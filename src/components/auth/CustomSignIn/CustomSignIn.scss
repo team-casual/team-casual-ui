@@ -38,7 +38,7 @@
 			font-size: 0.9rem;
 		}
 
-		:focus {
+		input:focus {
 			box-shadow: none;
 			border-bottom: 1px solid #61dafb69 !important;
 		}
@@ -53,5 +53,16 @@
 			border-bottom: 1px solid #61dafb;
 		}
 
+		.signInButton {
+			border-color: #61dafb;
+
+			&:focus {
+				box-shadow: none;
+			}
+
+			&:hover {
+				background-color: #61dafb69;
+			}
+		}
 	}
 }
