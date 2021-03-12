@@ -46,7 +46,15 @@ const SiteNav = (props: SiteNavProps) => {
                     }
 
                     {props.user !== null &&
-                        <CustomSignOut />
+                        <>
+                            <Navbar.Text className="mr-4">
+                                <small>{props.user.attributes.email}</small>
+                            </Navbar.Text>
+
+                            <Navbar.Brand>
+                                <CustomSignOut />
+                            </Navbar.Brand>
+                        </>
                     }
                 </Nav>
             </Navbar.Collapse>
