@@ -14,10 +14,6 @@ const Login = (props: LoginProps) => {
                     <CustomSignIn />
                 </Authenticator>
             }
-
-            {props.user !== null && 
-                <p>You are signed in as: {props.user.attributes.email}.</p>
-            }
         </>
     );
 }
