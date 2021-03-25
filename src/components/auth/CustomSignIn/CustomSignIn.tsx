@@ -3,6 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { Auth } from "aws-amplify";
 import { IAuthenticatorProps } from "aws-amplify-react/lib-esm/Auth/Authenticator";
 import { Container, Row, Col, Card, InputGroup, FormControl, Button, Spinner } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import { Status } from "../../../models/enums/Status";
 
 import logo from '../../../logo.svg';
@@ -103,11 +104,16 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
                                         <Row>
                                             <Col className="text-center">
                                                 {status !== Status.LOADING &&
-                                                    <Button className="signInButton text-white" type="submit" variant="outline">Login</Button>
+                                                    <>
+                                                        <Button className="signInButton text-white" type="submit" variant="outline">Login</Button>
+                                                        <LinkContainer to="/register">
+                                                            <Button className="registerLink text-white" type="button" variant="outline">Register</Button> 
+                                                        </LinkContainer>
+                                                    </>
                                                 }
 
                                                 {status === Status.LOADING &&
-                                                    <Spinner animation="grow" style={{color: "#61dafb"}}>
+                                                    <Spinner animation="grow" style={{ color: "#61dafb" }}>
                                                         <span className="sr-only">Loading...</span>
                                                     </Spinner>
                                                 }

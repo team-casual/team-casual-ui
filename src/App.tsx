@@ -5,6 +5,7 @@ import { Auth, Hub } from "aws-amplify";
 
 import SiteNav from './components/navigation/SiteNav';
 import Login from "./views/Login/Login";
+import Register from "./views/Register/Register";
 import logo from './logo.svg';
 import './App.scss';
 
@@ -41,36 +42,46 @@ function App() {
         <Row>
           <Col>
             <Switch>
-              <Route exact path="/">
-                {user === null &&
-                  <Redirect to="/login" />
-                }
-                {user !== null &&
-                  <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <p>
-                      Team Casual<br />
-                      <small>Welcome {user.attributes.email}</small>
-                    </p>
-                  </header>
-                }
-              </Route>
+              {user !== null &&
+                <>
+                  <Route exact path="/">
+                    <header className="App-header">
+                      <img src={logo} className="App-logo" alt="logo" />
+                      <p>
+                        Team Casual<br />
+                        <small>Welcome {user.attributes.email}</small>
+                      </p>
+                    </header>
+                  </Route>
 
-              <Route exact path="/login">
-                <div className="login">
-                  {user !== null ?
-                    <Redirect to="/" /> : <Login user={user} />
-                  }
-                </div>
-              </Route>
+                  <Route exact path="/dnd">
+                    <div>DnD</div>
+                  </Route>
 
-              <Route exact path="/dnd">
-                <div>DnD</div>
-              </Route>
+                  <Route exact path="/minecraft">
+                    <div>Minecraft</div>
+                  </Route>
+                </>
+              }
 
-              <Route exact path="/minecraft">
-                <div>Minecraft</div>
-              </Route>
+              {user === null &&
+                <>
+                  <Route path="">
+                    <Redirect to="/login" />
+                  </Route>
+
+                  <Route exact path="/login">
+                    <div className="login">
+                      <Login user={user} />
+                    </div>
+                  </Route>
+
+                  <Route path="/register">
+                    <Register user={user} />
+                  </Route>
+                </>
+              }
+
             </Switch>
           </Col>
         </Row>
