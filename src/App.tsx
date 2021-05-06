@@ -76,7 +76,7 @@ function App() {
                     </div>
                   </Route>
 
-                  <Route path="/register">
+                  <Route path="/signup">
                     <Register user={user} />
                   </Route>
                 </>
