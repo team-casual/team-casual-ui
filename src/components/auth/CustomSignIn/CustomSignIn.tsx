@@ -5,6 +5,7 @@ import { IAuthenticatorProps } from "aws-amplify-react/lib-esm/Auth/Authenticato
 import { Container, Row, Col, Card, InputGroup, FormControl, Button, Spinner } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Status } from "../../../models/enums/Status";
+import { toastErrorConfig } from "../../common/toastHelpers";
 
 import logo from '../../../logo.svg';
 
@@ -35,15 +36,7 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
         catch (error) {
             console.error(error);
             if (error.message) {
-                toast.error(error.message, {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: false,
-                    progress: undefined,
-                });
+                toast.error(error.message, toastErrorConfig);
 
                 setStatus(Status.ERROR);
             }
