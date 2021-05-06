@@ -1,11 +1,13 @@
 import React, { FormEvent, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Container, Row, Col, Card, InputGroup, FormControl, Button, Spinner, Form } from "react-bootstrap";
 import { Status } from "../../../models/enums/Status";
 import { LinkContainer } from "react-router-bootstrap";
 import { validateConfirmPassword, validatePassword } from "../authHelpers";
 import { MIN_PASSWORD_LENGTH } from "../MIN_PASSWORD_LENGTH";
 import { Auth, Logger } from 'aws-amplify';
+import { toastErrorConfig } from "../../common/toastHelpers";
+import { IAuthenticatorProps } from "aws-amplify-react/lib-esm/Auth/Authenticator";
 
 import logo from '../../../logo.svg';
 
@@ -13,7 +15,7 @@ import "./CustomSignUp.scss";
 
 const logger = new Logger("CustomSignUp");
 
-export const CustomSignUp = () => {
+export const CustomSignUp = (props: IAuthenticatorProps) => {
     const [status, setStatus] = useState<Status>(Status.LOADED);
     const [validated, setValidated] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
@@ -28,15 +30,33 @@ export const CustomSignUp = () => {
         validateConfirmPassword(event, newPassword, password);
     };
 
-    const signUp = (event: FormEvent<HTMLFormElement>) => {
+    const signUp = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        
+
         const form = event.currentTarget;
 
         if (form.checkValidity()) {
-            setStatus(Status.LOADING);
-            // Auth.signUp(username, password);
-            setStatus(Status.LOADED);
+            try {
+                logger.info(`New sign up request, username: ${username}`);
+
+                const user = await Auth.signUp(username, password);
+
+                if (!props.onStateChange) {
+                    return;
+                }
+                else {
+                    props.onStateChange("signedIn", user);
+                }
+            }
+            catch (error) {
+                logger.error(`Sign up error: ${error.message}`);
+
+                if (error.message) {
+                    toast.error(error.message, toastErrorConfig);
+
+                    setStatus(Status.ERROR);
+                }
+            }
         }
 
         setValidated(true);
