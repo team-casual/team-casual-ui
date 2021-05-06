@@ -5,7 +5,7 @@
 	align-items: center;
 
 	.signInLogo {
-		width: 25rem;
+		width: 13rem;
 	}
 
 	.signInTitleContainer {
@@ -16,6 +16,10 @@
 	}
 
 	@media screen and (max-width: 770px) {
+		.signInLogo {
+			width: 9rem;
+		}
+
 		.signInTitleContainer {
 			justify-content: center;
 			padding-bottom: 1rem;
@@ -23,8 +27,8 @@
 	}
 
 	.signInCard {
-		background-color: transparent;
-		border: none;
+		background-color: #313640;
+		border: 1px solid #61dafb;
 		color: white;
 	}
 

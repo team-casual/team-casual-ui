@@ -111,8 +111,8 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
                                                             </Col>
 
                                                             <Col className="text-right">
-                                                                <LinkContainer to="/signup">
-                                                                    <Button className="registerLink text-white" type="button" variant="outline">Sign Up</Button>
+                                                                <LinkContainer to="/register">
+                                                                    <Button className="registerLink text-white" type="button" variant="outline">Register</Button>
                                                                 </LinkContainer>
                                                             </Col>
                                                         </Row>

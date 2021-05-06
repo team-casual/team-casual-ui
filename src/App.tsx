@@ -70,15 +70,15 @@ function App() {
                     <Redirect to="/login" />
                   </Route>
 
-                  <Route exact path="/login">
-                    <div className="login">
+                  <div className="login">
+                    <Route exact path="/login">
                       <Login user={user} />
-                    </div>
-                  </Route>
+                    </Route>
 
-                  <Route path="/signup">
-                    <Register user={user} />
-                  </Route>
+                    <Route path="/register">
+                      <Register user={user} />
+                    </Route>
+                  </div>
                 </>
               }
 
