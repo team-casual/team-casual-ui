@@ -105,10 +105,17 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
                                             <Col className="text-center">
                                                 {status !== Status.LOADING &&
                                                     <>
-                                                        <Button className="signInButton text-white" type="submit" variant="outline">Login</Button>
-                                                        <LinkContainer to="/signup">
-                                                            <Button className="registerLink text-white" type="button" variant="outline">Sign Up</Button> 
-                                                        </LinkContainer>
+                                                        <Row>
+                                                            <Col className="text-left">
+                                                                <Button className="signInButton text-white" type="submit" variant="outline">Login</Button>
+                                                            </Col>
+
+                                                            <Col className="text-right">
+                                                                <LinkContainer to="/signup">
+                                                                    <Button className="registerLink text-white" type="button" variant="outline">Sign Up</Button>
+                                                                </LinkContainer>
+                                                            </Col>
+                                                        </Row>
                                                     </>
                                                 }
 
