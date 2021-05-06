@@ -92,7 +92,7 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
                                                 <label htmlFor="email">Password</label>
                                                 <InputGroup className="mb-5">
                                                     <FormControl
-                                                        id="email"
+                                                        id="password"
                                                         type="password"
                                                         placeholder="Enter your password"
                                                         onChange={e => setPassword(e.target.value)}
