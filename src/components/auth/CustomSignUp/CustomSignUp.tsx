@@ -1,25 +1,53 @@
-import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { Container, Row, Col, Card, InputGroup, FormControl, Button, Spinner } from "react-bootstrap";
+import React, { FormEvent, useState } from "react";
+import { ToastContainer } from "react-toastify";
+import { Container, Row, Col, Card, InputGroup, FormControl, Button, Spinner, Form } from "react-bootstrap";
 import { Status } from "../../../models/enums/Status";
 import { LinkContainer } from "react-router-bootstrap";
+import { validateConfirmPassword, validatePassword } from "../authHelpers";
+import { MIN_PASSWORD_LENGTH } from "../MIN_PASSWORD_LENGTH";
+import { Auth, Logger } from 'aws-amplify';
 
 import logo from '../../../logo.svg';
 
 import "./CustomSignUp.scss";
 
+const logger = new Logger("CustomSignUp");
+
 export const CustomSignUp = () => {
     const [status, setStatus] = useState<Status>(Status.LOADED);
+    const [validated, setValidated] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+    const updatePassword = (event: any, newPassword: string) => {
+        validatePassword(event, newPassword);
+        setPassword(newPassword);
+    }
+
+    const updateConfirmPassword = (event: any, newPassword: string) => {
+        validateConfirmPassword(event, newPassword, password);
+    };
+
+    const signUp = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        
+        const form = event.currentTarget;
+
+        if (form.checkValidity()) {
+            setStatus(Status.LOADING);
+            // Auth.signUp(username, password);
+            setStatus(Status.LOADED);
+        }
+
+        setValidated(true);
+    }
 
     return (
         <>
             <ToastContainer />
 
             <Container className="signUpContainer">
-            <Row className="text-center">
+                <Row className="text-center">
                     <Col lg="2" sm="12"></Col>
                     <Col lg="3" sm="12" className="signUpTitleContainer">
                         <img className="signUpLogo" src={logo} alt="Team Casual Logo" />
@@ -35,7 +63,7 @@ export const CustomSignUp = () => {
                     <Col lg="6" sm="12">
                         <Card className="signUpCard">
                             <Card.Body className="signUpCardBody">
-                                <form onSubmit={(e) => { }}>
+                                <Form onSubmit={signUp} validated={validated} noValidate>
                                     <Row>
                                         <Col>
                                             <label htmlFor="email">Email</label>
@@ -54,18 +82,32 @@ export const CustomSignUp = () => {
                                                     id="password"
                                                     type="password"
                                                     placeholder="Enter your password"
-                                                    onChange={e => setPassword(e.target.value)}
+                                                    onChange={e => updatePassword(e, e.target.value)}
                                                     required />
+
+                                                <Form.Control.Feedback type="invalid">
+                                                    Passwords must:
+                                                    <ul>
+                                                        <li>Be {MIN_PASSWORD_LENGTH} characters in length.</li>
+                                                        <li>Include a number</li>
+                                                        <li>Include lowercase characters</li>
+                                                        <li>Include uppercase characters</li>
+                                                    </ul>
+                                                </Form.Control.Feedback>
                                             </InputGroup>
 
                                             <label htmlFor="email">Confirm Password</label>
                                             <InputGroup className="mb-5">
                                                 <FormControl
-                                                    id="password"
+                                                    id="confirmPassword"
                                                     type="password"
                                                     placeholder="Confirm your password"
-                                                    onChange={e => setConfirmPassword(e.target.value)}
+                                                    onChange={e => updateConfirmPassword(e, e.target.value)}
                                                     required />
+
+                                                <Form.Control.Feedback type="invalid">
+                                                    Passwords must match.
+                                                </Form.Control.Feedback>
                                             </InputGroup>
                                         </Col>
                                     </Row>
@@ -95,7 +137,7 @@ export const CustomSignUp = () => {
                                             }
                                         </Col>
                                     </Row>
-                                </form>
+                                </Form>
                             </Card.Body>
                         </Card>
                     </Col>
