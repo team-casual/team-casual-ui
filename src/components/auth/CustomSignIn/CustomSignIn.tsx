@@ -67,7 +67,7 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
                         </Col>
 
                         <Col lg="3" sm="12" className="signInTitleContainer">
-                            <h2 className="text-white text-center">Team Casual</h2>
+                            <h2 className="text-white text-center signInTitle">Team Casual</h2>
                         </Col>
                     </Row>
 

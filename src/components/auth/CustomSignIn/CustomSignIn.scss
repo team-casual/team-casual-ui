@@ -3,6 +3,10 @@
 	display: block;
 	justify-content: center;
 	align-items: center;
+	border-bottom: 1px solid #61dafb;
+	animation: fadeInAnimation ease 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 
 	.signInLogo {
 		width: 13rem;
@@ -13,6 +17,10 @@
 		display: flex;
 		padding-left: none;
 		padding-right: none;
+
+		.signInTitle {
+			border-bottom: 1px solid #61dafb;
+		}
 	}
 
 	@media screen and (max-width: 770px) {
@@ -67,6 +75,11 @@
 			&:hover {
 				background-color: #61dafb69;
 			}
+		}
+
+		.registerLink {
+			border-bottom: 1px solid #61dafb;
+			border-radius: 0;
 		}
 	}
 }
