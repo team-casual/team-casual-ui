@@ -3,7 +3,9 @@ import { ToastContainer, toast } from "react-toastify";
 import { Auth } from "aws-amplify";
 import { IAuthenticatorProps } from "aws-amplify-react/lib-esm/Auth/Authenticator";
 import { Container, Row, Col, Card, InputGroup, FormControl, Button, Spinner } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import { Status } from "../../../models/enums/Status";
+import { toastErrorConfig } from "../../common/toastHelpers";
 
 import logo from '../../../logo.svg';
 
@@ -34,15 +36,7 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
         catch (error) {
             console.error(error);
             if (error.message) {
-                toast.error(error.message, {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: false,
-                    progress: undefined,
-                });
+                toast.error(error.message, toastErrorConfig);
 
                 setStatus(Status.ERROR);
             }
@@ -66,7 +60,7 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
                         </Col>
 
                         <Col lg="3" sm="12" className="signInTitleContainer">
-                            <h2 className="text-white text-center">Team Casual</h2>
+                            <h2 className="text-white text-center signInTitle">Team Casual</h2>
                         </Col>
                     </Row>
 
@@ -91,7 +85,7 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
                                                 <label htmlFor="email">Password</label>
                                                 <InputGroup className="mb-5">
                                                     <FormControl
-                                                        id="email"
+                                                        id="password"
                                                         type="password"
                                                         placeholder="Enter your password"
                                                         onChange={e => setPassword(e.target.value)}
@@ -103,11 +97,23 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
                                         <Row>
                                             <Col className="text-center">
                                                 {status !== Status.LOADING &&
-                                                    <Button className="signInButton text-white" type="submit" variant="outline">Login</Button>
+                                                    <>
+                                                        <Row>
+                                                            <Col className="text-left">
+                                                                <Button className="signInButton text-white" type="submit" variant="outline">Login</Button>
+                                                            </Col>
+
+                                                            <Col className="text-right">
+                                                                <LinkContainer to="/register">
+                                                                    <Button className="registerLink text-white" type="button" variant="outline">Register</Button>
+                                                                </LinkContainer>
+                                                            </Col>
+                                                        </Row>
+                                                    </>
                                                 }
 
                                                 {status === Status.LOADING &&
-                                                    <Spinner animation="grow" style={{color: "#61dafb"}}>
+                                                    <Spinner animation="grow" style={{ color: "#61dafb" }}>
                                                         <span className="sr-only">Loading...</span>
                                                     </Spinner>
                                                 }

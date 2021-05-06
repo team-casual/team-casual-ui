@@ -2,7 +2,7 @@
   "providers": [
     "awscloudformation"
   ],
-  "projectName": "team-casual-ui",
+  "projectName": "teamcasualui",
   "version": "3.0",
   "frontend": "javascript",
   "javascript": {
@@ -10,8 +10,8 @@
     "config": {
       "SourceDir": "src",
       "DistributionDir": "build",
-      "BuildCommand": "yarn build",
-      "StartCommand": "yarn start"
+      "BuildCommand": "npm.cmd run-script build",
+      "StartCommand": "npm.cmd run-script start"
     }
   }
 }
