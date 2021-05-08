@@ -67,7 +67,7 @@ export const CustomSignUp = (props: IAuthenticatorProps) => {
             <ToastContainer />
 
             <Container className="signUpContainer">
-                <Row className="text-center">
+                <Row className="text-center mb-4">
                     <Col lg="2" sm="12"></Col>
                     <Col lg="3" sm="12" className="signUpTitleContainer">
                         <img className="signUpLogo" src={logo} alt="Team Casual Logo" />
