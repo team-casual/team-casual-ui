@@ -9,13 +9,14 @@ import { Auth, Logger } from 'aws-amplify';
 import { toastErrorConfig } from "../../common/toastHelpers";
 import { IAuthenticatorProps } from "aws-amplify-react/lib-esm/Auth/Authenticator";
 
+
 import logo from '../../../logo.svg';
 
-import "./CustomSignUp.scss";
+import "./CustomConfirmSignUp.scss";
 
-const logger = new Logger("CustomSignUp");
+const logger = new Logger("CustomConfirmSignUp");
 
-export const CustomSignUp = (props: IAuthenticatorProps) => {
+export const CustomConfirmSignUp = (props: IAuthenticatorProps) => {
     const [status, setStatus] = useState<Status>(Status.LOADED);
     const [validated, setValidated] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
@@ -39,13 +40,13 @@ export const CustomSignUp = (props: IAuthenticatorProps) => {
             try {
                 logger.info(`New sign up request, username: ${username}`);
 
-                const user = await Auth.signUp(username, password);
+                const user = await Auth.confirmSignUp(username, password);
 
                 if (!props.onStateChange) {
                     return;
                 }
                 else {
-                    props.onStateChange("confirmSignUp", user);
+                    props.onStateChange("signedIn", user);
                 }
             }
             catch (error) {
@@ -74,7 +75,7 @@ export const CustomSignUp = (props: IAuthenticatorProps) => {
                     </Col>
 
                     <Col lg="4" sm="12" className="signUpTitleContainer">
-                        <h2 className="text-white text-center signUpTitle">Create an Account</h2>
+                        <h2 className="text-white text-center signUpTitle">Enter Your Confirmation Code Below</h2>
                     </Col>
                 </Row>
 

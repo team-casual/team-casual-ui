@@ -44,6 +44,10 @@ function App() {
             <Switch>
               {user !== null &&
                 <>
+                  <Route path="">
+                    <Redirect to="/" />
+                  </Route>
+
                   <Route exact path="/">
                     <header className="App-header">
                       <img src={logo} className="App-logo" alt="logo" />

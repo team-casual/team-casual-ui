@@ -1,0 +1,85 @@
+.signUpContainer {
+	height: 100vh;
+	display: block;
+	justify-content: center;
+	align-items: center;
+	border-bottom: 1px solid #61dafb;
+	animation: fadeInAnimation ease 3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+
+	.signUpLogo {
+		width: 13rem;
+	}
+
+	.signUpTitleContainer {
+		align-items: center;
+		display: flex;
+		padding-left: none;
+		padding-right: none;
+
+		.signUpTitle {
+			border-bottom: 1px solid #61dafb;
+		}
+	}
+
+	@media screen and (max-width: 770px) {
+		.signUpLogo {
+			width: 9rem;
+		}
+
+		.signUpTitleContainer {
+			justify-content: center;
+			padding-bottom: 1rem;
+		}
+	}
+
+	.signUpCard {
+		background-color: #313640;
+		border: 1px solid #61dafb;
+		color: white;
+	}
+
+	.signUpCardBody {
+		input {
+			border: none;
+			border-radius: 0;
+			background-color: transparent;
+			border-bottom: 1px solid #61dafb;
+			color: white;
+			font-size: 0.9rem;
+		}
+
+		input:focus {
+			box-shadow: none;
+			border-bottom: 1px solid #61dafb69 !important;
+		}
+
+		:-webkit-autofill {
+			background-color: transparent;
+			border: none;
+			background-clip: text;
+			-webkit-background-clip: text !important;
+			-webkit-text-fill-color: white !important;
+			caret-color: white;
+			border-bottom: 1px solid #61dafb;
+		}
+
+		.signUpButton {
+			border-color: #61dafb;
+
+			&:focus {
+				box-shadow: none;
+			}
+
+			&:hover {
+				background-color: #61dafb69;
+			}
+		}
+
+		.loginLink {
+			border-bottom: 1px solid #61dafb;
+			border-radius: 0;
+		}
+	}
+}
