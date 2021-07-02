@@ -1,6 +1,6 @@
 {
   "auth": {
-    "teamcasualuif276f4ec": {
+    "teamcasualuid425827f": {
       "service": "Cognito",
       "serviceType": "imported",
       "providerPlugin": "awscloudformation",
