@@ -5,7 +5,6 @@ import { Auth, Hub } from "aws-amplify";
 
 import SiteNav from './components/navigation/SiteNav';
 import Login from "./views/Login/Login";
-import Register from "./views/Register/Register";
 import logo from './logo.svg';
 import './App.scss';
 
@@ -44,6 +43,10 @@ function App() {
             <Switch>
               {user !== null &&
                 <>
+                  <Route path="">
+                    <Redirect to="/" />
+                  </Route>
+
                   <Route exact path="/">
                     <header className="App-header">
                       <img src={logo} className="App-logo" alt="logo" />
@@ -73,10 +76,6 @@ function App() {
                   <div className="login">
                     <Route exact path="/login">
                       <Login user={user} />
-                    </Route>
-
-                    <Route path="/register">
-                      <Register user={user} />
                     </Route>
                   </div>
                 </>

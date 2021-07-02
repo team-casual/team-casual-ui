@@ -3,7 +3,6 @@ import { ToastContainer, toast } from "react-toastify";
 import { Auth } from "aws-amplify";
 import { IAuthenticatorProps } from "aws-amplify-react/lib-esm/Auth/Authenticator";
 import { Container, Row, Col, Card, InputGroup, FormControl, Button, Spinner } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 import { Status } from "../../../models/enums/Status";
 import { toastErrorConfig } from "../../common/toastHelpers";
 
@@ -16,29 +15,39 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
+    const stateChangeHandler = (state: string, data?: any) => {
+        if (props.onStateChange) {
+            props.onStateChange(state, data);
+        }
+        else {
+            return;
+        }
+    };
+
+    const registerLink = () => {
+        stateChangeHandler("signUp");
+    };
+
     const signIn = async (event: FormEvent, username: string, password: string) => {
         event.preventDefault();
         setStatus(Status.LOADING);
 
         try {
             const user = await Auth.signIn(username, password);
-            if (!props.onStateChange) {
-                return;
-            }
-
-            if (user.challengeName === "SMS_MFA" || user.challengeName === "SOFTWARE_TOKEN_MFA") {
-                props.onStateChange("confirmSignIn", user);
-            }
-            else {
-                props.onStateChange("signedIn", user);
-            }
+            stateChangeHandler("signedIn", user);
         }
         catch (error) {
-            console.error(error);
-            if (error.message) {
-                toast.error(error.message, toastErrorConfig);
+            if (error.code === "UserNotConfirmedException") {
+                stateChangeHandler("confirmSignUp", username);
+                setStatus(Status.LOADED);
+            }
+            else {
+                console.error(error);
+                if (error.message) {
+                    toast.error(error.message, toastErrorConfig);
 
-                setStatus(Status.ERROR);
+                    setStatus(Status.ERROR);
+                }
             }
         }
     }
@@ -47,13 +56,12 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
         return null;
     }
     else {
-
         return (
             <>
                 <ToastContainer />
 
                 <Container className="signInContainer">
-                    <Row className="text-center">
+                    <Row className="text-center mb-4">
                         <Col lg="2" sm="12"></Col>
                         <Col lg="3" sm="12" className="signInTitleContainer">
                             <img className="signInLogo" src={logo} alt="Team Casual Logo" />
@@ -104,9 +112,7 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
                                                             </Col>
 
                                                             <Col className="text-right">
-                                                                <LinkContainer to="/register">
-                                                                    <Button className="registerLink text-white" type="button" variant="outline">Register</Button>
-                                                                </LinkContainer>
+                                                                <Button className="registerLink text-white" type="button" variant="outline" onClick={() => registerLink()}>Register</Button>
                                                             </Col>
                                                         </Row>
                                                     </>
