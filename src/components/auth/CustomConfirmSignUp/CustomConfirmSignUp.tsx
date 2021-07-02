@@ -2,17 +2,16 @@ import React, { FormEvent, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { Container, Row, Col, Card, InputGroup, FormControl, Button, Spinner, Form } from "react-bootstrap";
 import { Status } from "../../../models/enums/Status";
-import { LinkContainer } from "react-router-bootstrap";
-import { validateConfirmPassword, validatePassword } from "../authHelpers";
-import { MIN_PASSWORD_LENGTH } from "../MIN_PASSWORD_LENGTH";
 import { Auth, Logger } from 'aws-amplify';
-import { toastErrorConfig } from "../../common/toastHelpers";
+import { toastErrorConfig, toastInfoConfig } from "../../common/toastHelpers";
 import { IAuthenticatorProps } from "aws-amplify-react/lib-esm/Auth/Authenticator";
 
 
 import logo from '../../../logo.svg';
 
 import "./CustomConfirmSignUp.scss";
+import { validateConfirmationCode } from "../authHelpers";
+import { useEffect } from "react";
 
 const logger = new Logger("CustomConfirmSignUp");
 
@@ -20,37 +19,63 @@ export const CustomConfirmSignUp = (props: IAuthenticatorProps) => {
     const [status, setStatus] = useState<Status>(Status.LOADED);
     const [validated, setValidated] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+    const [code, setCode] = useState<string>("");
+    const [codeResent, setCodeResent] = useState<boolean>(false);
 
-    const updatePassword = (event: any, newPassword: string) => {
-        validatePassword(event, newPassword);
-        setPassword(newPassword);
-    }
+    useEffect(() => {
+        setUsername(props.authData ?? "");
+        setCodeResent(false);
+    }, [props.authData]);
 
-    const updateConfirmPassword = (event: any, newPassword: string) => {
-        validateConfirmPassword(event, newPassword, password);
+    const backButton = () => {
+        if (props.onStateChange) {
+            props.onStateChange("signIn");
+        }
     };
 
-    const signUp = async (event: FormEvent<HTMLFormElement>) => {
+    const updateCode = (event: any, newCode: string) => {
+        validateConfirmationCode(event, newCode);
+        setCode(newCode);
+    };
+
+    const resendConfirmation = async () => {
+        if (!codeResent) {
+            try {
+                logger.info(`Resending confirmation code to: ${username}`);
+
+                await Auth.resendSignUp(username);
+                setCodeResent(true);
+                toast.info("Email Sent.", toastInfoConfig);
+            }
+            catch (error) {
+                logger.error(`Error resending confirmation code: ${error.message}`);
+
+                if (error.message) {
+                    toast.error(error.message, toastErrorConfig);
+
+                    setStatus(Status.ERROR);
+                }
+            }
+        }
+    }
+
+    const confirmSignUp = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const form = event.currentTarget;
 
         if (form.checkValidity()) {
             try {
-                logger.info(`New sign up request, username: ${username}`);
+                logger.info(`Checking confirmation code, username: ${username}`);
 
-                const user = await Auth.confirmSignUp(username, password);
+                await Auth.confirmSignUp(username, code);
 
-                if (!props.onStateChange) {
-                    return;
-                }
-                else {
-                    props.onStateChange("signedIn", user);
+                if (props.onStateChange) {
+                    props.onStateChange("signedUp");
                 }
             }
             catch (error) {
-                logger.error(`Sign up error: ${error.message}`);
+                logger.error(`Error confirming code: ${error.message}`);
 
                 if (error.message) {
                     toast.error(error.message, toastErrorConfig);
@@ -61,109 +86,106 @@ export const CustomConfirmSignUp = (props: IAuthenticatorProps) => {
         }
 
         setValidated(true);
+    };
+
+    if (props.authState !== "confirmSignUp") {
+        return null;
     }
+    else {
+        return (
+            <>
+                <ToastContainer />
 
-    return (
-        <>
-            <ToastContainer />
+                <Container className="signUpContainer">
+                    <Row className="text-center mb-4">
+                        <Col lg="2" sm="12"></Col>
+                        <Col lg="3" sm="12" className="signUpTitleContainer">
+                            <img className="signUpLogo" src={logo} alt="Team Casual Logo" />
+                        </Col>
 
-            <Container className="signUpContainer">
-                <Row className="text-center">
-                    <Col lg="2" sm="12"></Col>
-                    <Col lg="3" sm="12" className="signUpTitleContainer">
-                        <img className="signUpLogo" src={logo} alt="Team Casual Logo" />
-                    </Col>
+                        <Col lg="4" sm="12" className="signUpTitleContainer">
+                            <h2 className="text-white text-center signUpTitle">Confirm Your Account</h2>
+                        </Col>
+                    </Row>
 
-                    <Col lg="4" sm="12" className="signUpTitleContainer">
-                        <h2 className="text-white text-center signUpTitle">Enter Your Confirmation Code Below</h2>
-                    </Col>
-                </Row>
+                    <Row>
+                        <Col>
+                            <p className="text-white text-center">A 6 digit verification code should have been sent to the email address below.</p>
+                        </Col>
+                    </Row>
 
-                <Row>
-                    <Col lg="3" sm="12"></Col>
-                    <Col lg="6" sm="12">
-                        <Card className="signUpCard">
-                            <Card.Body className="signUpCardBody">
-                                <Form onSubmit={signUp} validated={validated} noValidate>
-                                    <Row>
-                                        <Col>
-                                            <label htmlFor="email">Email</label>
-                                            <InputGroup className="mb-5">
-                                                <FormControl
-                                                    id="email"
-                                                    type="email"
-                                                    placeholder="Enter your email address"
-                                                    onChange={e => setUsername(e.target.value)}
-                                                    required />
-                                            </InputGroup>
+                    <Row>
+                        <Col lg="3" sm="12"></Col>
+                        <Col lg="6" sm="12">
+                            <Card className="signUpCard">
+                                <Card.Body className="signUpCardBody">
+                                    <Form onSubmit={confirmSignUp} validated={validated} noValidate>
+                                        <Row>
+                                            <Col>
+                                                <label htmlFor="email">Email</label>
+                                                <InputGroup className="mb-5">
+                                                    <FormControl
+                                                        id="email"
+                                                        type="email"
+                                                        placeholder="Enter your email address"
+                                                        defaultValue={username}
+                                                        onChange={e => setUsername(e.target.value)}
+                                                        required />
+                                                </InputGroup>
 
-                                            <label htmlFor="email">Password</label>
-                                            <InputGroup className="mb-5">
-                                                <FormControl
-                                                    id="password"
-                                                    type="password"
-                                                    placeholder="Enter your password"
-                                                    onChange={e => updatePassword(e, e.target.value)}
-                                                    required />
+                                                <label htmlFor="code">Code</label>
+                                                <InputGroup className="mb-5">
+                                                    <FormControl
+                                                        id="code"
+                                                        type="text"
+                                                        placeholder="Enter your confirmation code"
+                                                        onChange={e => updateCode(e, e.target.value)}
+                                                        required />
 
-                                                <Form.Control.Feedback type="invalid">
-                                                    Passwords must:
-                                                    <ul>
-                                                        <li>Be {MIN_PASSWORD_LENGTH} characters in length.</li>
-                                                        <li>Include a number</li>
-                                                        <li>Include lowercase characters</li>
-                                                        <li>Include uppercase characters</li>
-                                                    </ul>
-                                                </Form.Control.Feedback>
-                                            </InputGroup>
+                                                    <Form.Control.Feedback type="invalid">
+                                                        Code must:
+                                                        <ul>
+                                                            <li>Be 6 characters in length.</li>
+                                                        </ul>
+                                                    </Form.Control.Feedback>
+                                                </InputGroup>
+                                            </Col>
+                                        </Row>
 
-                                            <label htmlFor="email">Confirm Password</label>
-                                            <InputGroup className="mb-5">
-                                                <FormControl
-                                                    id="confirmPassword"
-                                                    type="password"
-                                                    placeholder="Confirm your password"
-                                                    onChange={e => updateConfirmPassword(e, e.target.value)}
-                                                    required />
+                                        <Row>
+                                            <Col className="text-center">
+                                                {status !== Status.LOADING &&
+                                                    <>
+                                                        <Row>
+                                                            <Col className="text-left">
+                                                                <Button className="signUpButton text-white" type="submit" variant="outline">Submit</Button>
+                                                            </Col>
 
-                                                <Form.Control.Feedback type="invalid">
-                                                    Passwords must match.
-                                                </Form.Control.Feedback>
-                                            </InputGroup>
-                                        </Col>
-                                    </Row>
+                                                            <Col className="text-center">
+                                                                <Button className="signUpButton text-white" type="button" variant="outline" onClick={() => resendConfirmation()} disabled={codeResent}>Resend</Button>
+                                                            </Col>
 
-                                    <Row>
-                                        <Col className="text-center">
-                                            {status !== Status.LOADING &&
-                                                <>
-                                                    <Row>
-                                                        <Col className="text-left">
-                                                            <Button className="signUpButton text-white" type="submit" variant="outline">Submit</Button>
-                                                        </Col>
+                                                            <Col className="text-right">
+                                                                <Button className="loginLink text-white" type="button" variant="outline" onClick={() => backButton()}>Back</Button>
+                                                            </Col>
+                                                        </Row>
+                                                    </>
+                                                }
 
-                                                        <Col className="text-right">
-                                                            <LinkContainer to="/login">
-                                                                <Button className="loginLink text-white" type="button" variant="outline">Back</Button>
-                                                            </LinkContainer>
-                                                        </Col>
-                                                    </Row>
-                                                </>
-                                            }
-
-                                            {status === Status.LOADING &&
-                                                <Spinner animation="grow" style={{ color: "#61dafb" }}>
-                                                    <span className="sr-only">Loading...</span>
-                                                </Spinner>
-                                            }
-                                        </Col>
-                                    </Row>
-                                </Form>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-            </Container>
-        </>
-    );
+                                                {status === Status.LOADING &&
+                                                    <Spinner animation="grow" style={{ color: "#61dafb" }}>
+                                                        <span className="sr-only">Loading...</span>
+                                                    </Spinner>
+                                                }
+                                            </Col>
+                                        </Row>
+                                    </Form>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
+            </>
+        );
+    }
 }
