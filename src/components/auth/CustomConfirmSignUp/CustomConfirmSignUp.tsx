@@ -47,7 +47,7 @@ export const CustomConfirmSignUp = (props: IAuthenticatorProps) => {
                 setCodeResent(true);
                 toast.info("Email Sent.", toastInfoConfig);
             }
-            catch (error) {
+            catch (error: any) {
                 logger.error(`Error resending confirmation code: ${error.message}`);
 
                 if (error.message) {
