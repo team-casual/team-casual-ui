@@ -17,7 +17,7 @@ function App() {
         const userResponse = await Auth.currentUserInfo();
         setUser(userResponse);
       }
-      catch (error) {
+      catch (error: any) {
         setUser(null);
       }
     }

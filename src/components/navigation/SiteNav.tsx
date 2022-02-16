@@ -4,6 +4,7 @@ import { LinkContainer } from "react-router-bootstrap";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import { IconProp } from "@fortawesome/fontawesome-svg-core"; // TODO: Update fort-awesome and remove this cast
 
 import CustomSignOut from "../auth/CustomSignOut/CustomSignOut";
 //import { SignOut } from 'aws-amplify-react';
@@ -40,7 +41,7 @@ const SiteNav = (props: SiteNavProps) => {
                     {props.user === null &&
                         <LinkContainer to="/Login">
                             <Nav.Link>
-                                <FontAwesomeIcon icon={faSignInAlt} /> Login
+                                <FontAwesomeIcon icon={faSignInAlt as IconProp} /> Login
                             </Nav.Link>
                         </LinkContainer>
                     }

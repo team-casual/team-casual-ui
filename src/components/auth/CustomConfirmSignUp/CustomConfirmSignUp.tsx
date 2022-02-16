@@ -74,7 +74,7 @@ export const CustomConfirmSignUp = (props: IAuthenticatorProps) => {
                     props.onStateChange("signedUp");
                 }
             }
-            catch (error) {
+            catch (error: any) {
                 logger.error(`Error confirming code: ${error.message}`);
 
                 if (error.message) {

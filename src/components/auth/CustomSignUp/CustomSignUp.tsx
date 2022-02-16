@@ -60,7 +60,7 @@ export const CustomSignUp = (props: IAuthenticatorProps) => {
                     }
                 }
             }
-            catch (error) {
+            catch (error: any) {
                 logger.error(`Sign up error: ${error.message}`);
 
                 if (error.message) {

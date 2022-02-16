@@ -36,7 +36,7 @@ export const CustomSignIn = (props: IAuthenticatorProps) => {
             const user = await Auth.signIn(username, password);
             stateChangeHandler("signedIn", user);
         }
-        catch (error) {
+        catch (error: any) {
             if (error.code === "UserNotConfirmedException") {
                 stateChangeHandler("confirmSignUp", username);
                 setStatus(Status.LOADED);
