@@ -2,23 +2,30 @@ import React, { FormEvent, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { Container, Row, Col, Card, InputGroup, FormControl, Button, Spinner, Form } from "react-bootstrap";
 import { Status } from "../../../models/enums/Status";
-import { validateConfirmPassword, validatePassword } from "../authHelpers";
-import { MIN_PASSWORD_LENGTH } from "../MIN_PASSWORD_LENGTH";
 import { Auth, Logger } from 'aws-amplify';
-import { toastErrorConfig } from "../../common/toastHelpers";
+import { toastErrorConfig, toastInfoConfig } from "../../common/toastHelpers";
 import { IAuthenticatorProps } from "aws-amplify-react/lib-esm/Auth/Authenticator";
+
 
 import logo from '../../../logo.svg';
 
-import "./CustomSignUp.scss";
+import "./CustomConfirmSignUp.scss";
+import { validateConfirmationCode } from "../authHelpers";
+import { useEffect } from "react";
 
-const logger = new Logger("CustomSignUp");
+const logger = new Logger("CustomConfirmSignUp");
 
-export const CustomSignUp = (props: IAuthenticatorProps) => {
+export const CustomConfirmSignUp = (props: IAuthenticatorProps) => {
     const [status, setStatus] = useState<Status>(Status.LOADED);
     const [validated, setValidated] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+    const [code, setCode] = useState<string>("");
+    const [codeResent, setCodeResent] = useState<boolean>(false);
+
+    useEffect(() => {
+        setUsername(props.authData ?? "");
+        setCodeResent(false);
+    }, [props.authData]);
 
     const backButton = () => {
         if (props.onStateChange) {
@@ -26,42 +33,49 @@ export const CustomSignUp = (props: IAuthenticatorProps) => {
         }
     };
 
-    const updatePassword = (event: any, newPassword: string) => {
-        validatePassword(event, newPassword);
-        setPassword(newPassword);
+    const updateCode = (event: any, newCode: string) => {
+        validateConfirmationCode(event, newCode);
+        setCode(newCode);
     };
 
-    const updateConfirmPassword = (event: any, newPassword: string) => {
-        validateConfirmPassword(event, newPassword, password);
-    };
+    const resendConfirmation = async () => {
+        if (!codeResent) {
+            try {
+                logger.info(`Resending confirmation code to: ${username}`);
 
-    const signUp = async (event: FormEvent<HTMLFormElement>) => {
+                await Auth.resendSignUp(username);
+                setCodeResent(true);
+                toast.info("Email Sent.", toastInfoConfig);
+            }
+            catch (error) {
+                logger.error(`Error resending confirmation code: ${error.message}`);
+
+                if (error.message) {
+                    toast.error(error.message, toastErrorConfig);
+
+                    setStatus(Status.ERROR);
+                }
+            }
+        }
+    }
+
+    const confirmSignUp = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const form = event.currentTarget;
 
         if (form.checkValidity()) {
             try {
-                logger.info(`New sign up request, username: ${username}`);
+                logger.info(`Checking confirmation code, username: ${username}`);
 
-                const result = await Auth.signUp(username, password);
+                await Auth.confirmSignUp(username, code);
 
-                if (!props.onStateChange) {
-                    return;
-                }
-                else {
-                    if (result.userConfirmed) {
-                        const user = await Auth.signIn(username, password);
-                        props.onStateChange("signedIn", user);
-                    }
-
-                    if (!result.userConfirmed) {
-                        props.onStateChange("confirmSignUp", result.user.getUsername());
-                    }
+                if (props.onStateChange) {
+                    props.onStateChange("signedUp");
                 }
             }
             catch (error) {
-                logger.error(`Sign up error: ${error.message}`);
+                logger.error(`Error confirming code: ${error.message}`);
 
                 if (error.message) {
                     toast.error(error.message, toastErrorConfig);
@@ -72,9 +86,9 @@ export const CustomSignUp = (props: IAuthenticatorProps) => {
         }
 
         setValidated(true);
-    }
+    };
 
-    if (props.authState !== "signUp") {
+    if (props.authState !== "confirmSignUp") {
         return null;
     }
     else {
@@ -90,7 +104,13 @@ export const CustomSignUp = (props: IAuthenticatorProps) => {
                         </Col>
 
                         <Col lg="4" sm="12" className="signUpTitleContainer">
-                            <h2 className="text-white text-center signUpTitle">Create an Account</h2>
+                            <h2 className="text-white text-center signUpTitle">Confirm Your Account</h2>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col>
+                            <p className="text-white text-center">A 6 digit verification code should have been sent to the email address below.</p>
                         </Col>
                     </Row>
 
@@ -99,7 +119,7 @@ export const CustomSignUp = (props: IAuthenticatorProps) => {
                         <Col lg="6" sm="12">
                             <Card className="signUpCard">
                                 <Card.Body className="signUpCardBody">
-                                    <Form onSubmit={signUp} validated={validated} noValidate>
+                                    <Form onSubmit={confirmSignUp} validated={validated} noValidate>
                                         <Row>
                                             <Col>
                                                 <label htmlFor="email">Email</label>
@@ -108,41 +128,25 @@ export const CustomSignUp = (props: IAuthenticatorProps) => {
                                                         id="email"
                                                         type="email"
                                                         placeholder="Enter your email address"
+                                                        defaultValue={username}
                                                         onChange={e => setUsername(e.target.value)}
                                                         required />
                                                 </InputGroup>
 
-                                                <label htmlFor="email">Password</label>
+                                                <label htmlFor="code">Code</label>
                                                 <InputGroup className="mb-5">
                                                     <FormControl
-                                                        id="password"
-                                                        type="password"
-                                                        placeholder="Enter your password"
-                                                        onChange={e => updatePassword(e, e.target.value)}
+                                                        id="code"
+                                                        type="text"
+                                                        placeholder="Enter your confirmation code"
+                                                        onChange={e => updateCode(e, e.target.value)}
                                                         required />
 
                                                     <Form.Control.Feedback type="invalid">
-                                                        Passwords must:
+                                                        Code must:
                                                         <ul>
-                                                            <li>Be {MIN_PASSWORD_LENGTH} characters in length.</li>
-                                                            <li>Include a number</li>
-                                                            <li>Include lowercase characters</li>
-                                                            <li>Include uppercase characters</li>
+                                                            <li>Be 6 characters in length.</li>
                                                         </ul>
-                                                    </Form.Control.Feedback>
-                                                </InputGroup>
-
-                                                <label htmlFor="email">Confirm Password</label>
-                                                <InputGroup className="mb-5">
-                                                    <FormControl
-                                                        id="confirmPassword"
-                                                        type="password"
-                                                        placeholder="Confirm your password"
-                                                        onChange={e => updateConfirmPassword(e, e.target.value)}
-                                                        required />
-
-                                                    <Form.Control.Feedback type="invalid">
-                                                        Passwords must match.
                                                     </Form.Control.Feedback>
                                                 </InputGroup>
                                             </Col>
@@ -155,6 +159,10 @@ export const CustomSignUp = (props: IAuthenticatorProps) => {
                                                         <Row>
                                                             <Col className="text-left">
                                                                 <Button className="signUpButton text-white" type="submit" variant="outline">Submit</Button>
+                                                            </Col>
+
+                                                            <Col className="text-center">
+                                                                <Button className="signUpButton text-white" type="button" variant="outline" onClick={() => resendConfirmation()} disabled={codeResent}>Resend</Button>
                                                             </Col>
 
                                                             <Col className="text-right">

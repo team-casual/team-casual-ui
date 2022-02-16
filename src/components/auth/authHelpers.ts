@@ -15,10 +15,21 @@ export const validatePassword = (event: any, password: string): void => {
 
 export const validateConfirmPassword = (event: any, newPassword: string, password: string): void => {
 	const target = event.target as HTMLInputElement;
-	
+
 	validatePassword(event, newPassword);
 
 	if (newPassword === password) {
+		target.setCustomValidity("");
+	}
+	else {
+		target.setCustomValidity("invalid");
+	}
+};
+
+export const validateConfirmationCode = (event: any, code: string): void => {
+	const target = event.target as HTMLInputElement;
+
+	if (code.length === 6) {
 		target.setCustomValidity("");
 	}
 	else {

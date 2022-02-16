@@ -13,7 +13,12 @@
     },
     "categories": {
       "auth": {
-        "teamcasualui": {}
+        "teamcasualuid15d860a": {
+          "userPoolId": "eu-west-2_cGaCLbnPP",
+          "userPoolName": "teamcasualui-master",
+          "webClientId": "44dnubt8k5eumpgt4l7bqitn84",
+          "nativeClientId": "1cfuksc3467cr9c3n9mj30hqt1"
+        }
       }
     }
   },
