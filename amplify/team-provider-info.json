@@ -9,7 +9,8 @@
       "UnauthRoleName": "amplify-team-casual-ui-dev-72903-unauthRole",
       "StackName": "amplify-team-casual-ui-dev-72903",
       "StackId": "arn:aws:cloudformation:eu-west-2:034428243720:stack/amplify-team-casual-ui-dev-72903/323db4f0-4815-11eb-bb4c-061d5bdbfdc0",
-      "AmplifyAppId": "dios9yetsn3gm"
+      "AmplifyAppId": "dios9yetsn3gm",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-team-casual-ui-dev-72903-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
