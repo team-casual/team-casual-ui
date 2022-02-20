@@ -1,6 +1,23 @@
 {
-  "authSelections": "userPoolOnly",
+  "authSelections": "identityPoolAndUserPool",
   "resourceName": "teamcasualuid15d860a",
   "serviceType": "imported",
-  "region": "eu-west-2"
+  "region": "eu-west-2",
+  "usernameAttributes": [
+    "email"
+  ],
+  "requiredAttributes": [
+    "email"
+  ],
+  "passwordPolicyMinLength": 8,
+  "passwordPolicyCharacters": [
+    "Requires Lowercase",
+    "Requires Uppercase",
+    "Requires Numbers"
+  ],
+  "mfaConfiguration": "OFF",
+  "autoVerifiedAttributes": [
+    "email"
+  ],
+  "mfaTypes": []
 }

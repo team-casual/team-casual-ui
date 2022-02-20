@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "paths": {
+    "/minecraft/list-servers": {
+      "name": "/minecraft/list-servers",
+      "lambdaFunction": "getServers",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "read"
+        ]
+      }
+    }
+  }
+}
