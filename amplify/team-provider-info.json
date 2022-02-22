@@ -20,6 +20,12 @@
           "webClientId": "44dnubt8k5eumpgt4l7bqitn84",
           "nativeClientId": "1cfuksc3467cr9c3n9mj30hqt1"
         }
+      },
+      "function": {
+        "listServers": {
+          "deploymentBucketName": "amplify-team-casual-ui-dev-72903-deployment",
+          "s3Key": "amplify-builds/listServers-4e3877766e7344694e54-build.zip"
+        }
       }
     }
   },

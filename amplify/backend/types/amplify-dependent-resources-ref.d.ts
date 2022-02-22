@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
     "function": {
-        "getServers": {
+        "listServers": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
@@ -8,7 +8,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "api": {
-        "teamCasualAmplifyApi": {
+        "minecraftApi": {
             "RootUrl": "string",
             "ApiName": "string",
             "ApiId": "string"

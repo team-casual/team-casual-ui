@@ -5,6 +5,9 @@ import { Auth, Hub } from "aws-amplify";
 
 import SiteNav from './components/navigation/SiteNav';
 import Login from "./views/Login/Login";
+
+import Minecraft from "./views/Minecraft/Minecraft";
+
 import logo from './logo.svg';
 import './App.scss';
 
@@ -62,7 +65,7 @@ function App() {
                   </Route>
 
                   <Route exact path="/minecraft">
-                    <div>Minecraft</div>
+                    <Minecraft />
                   </Route>
                 </>
               }
