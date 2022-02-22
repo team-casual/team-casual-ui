@@ -13,10 +13,10 @@ Amplify.configure(awsmobile);
 API.configure({
   endpoints: [
       {
-          name: "minecraftApi", // name of the API in API Gateway console
-          endpoint: "https://mbqaced91e.execute-api.eu-west-2.amazonaws.com",
+          name: "team_casual", // name of the API in API Gateway console
+          endpoint: "https://vsq5ldzl04.execute-api.eu-west-2.amazonaws.com/dev",
           region: "eu-west-2",
-          paths: ['/minecraft/servers/']
+          paths: ['/minecraft/servers']
       }
   ]
 });
