@@ -12,84 +12,84 @@ import logo from './logo.svg';
 import './App.scss';
 
 function App() {
-  const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<any>(null);
 
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const userResponse = await Auth.currentUserInfo();
-        setUser(userResponse);
-      }
-      catch (error: any) {
-        setUser(null);
-      }
-    }
-
-    getUser();
-
-    Hub.listen("auth", getUser, "App");
-  }, []);
-
-  return (
-    <>
-      <Router>
-        {user !== null &&
-          <Row>
-            <Col>
-              <SiteNav user={user} />
-            </Col>
-          </Row>
+    useEffect(() => {
+        const getUser = async () => {
+            try {
+                const userResponse = await Auth.currentUserInfo();
+                setUser(userResponse);
+            }
+            catch (error: any) {
+                setUser(null);
+            }
         }
 
-        <Row>
-          <Col>
-            <Switch>
-              {user !== null &&
-                <>
-                  <Route path="">
-                    <Redirect to="/" />
-                  </Route>
+        getUser();
 
-                  <Route exact path="/">
-                    <header className="App-header">
-                      <img src={logo} className="App-logo" alt="logo" />
-                      <p>
-                        Team Casual<br />
-                        <small>Welcome {user.attributes.email}</small>
-                      </p>
-                    </header>
-                  </Route>
+        Hub.listen("auth", getUser, "App");
+    }, []);
 
-                  <Route exact path="/dnd">
-                    <div>DnD</div>
-                  </Route>
+    return (
+        <>
+            <Router>
+                {user !== null &&
+                    <Row>
+                        <Col>
+                            <SiteNav user={user} />
+                        </Col>
+                    </Row>
+                }
 
-                  <Route exact path="/minecraft">
-                    <Minecraft />
-                  </Route>
-                </>
-              }
+                <Row>
+                    <Col>
+                        <Switch>
+                            {user !== null &&
+                                <>
+                                    <Route path="">
+                                        <Redirect to="/" />
+                                    </Route>
 
-              {user === null &&
-                <>
-                  <Route path="">
-                    <Redirect to="/login" />
-                  </Route>
+                                    <Route exact path="/">
+                                        <header className="App-header">
+                                            <img src={logo} className="App-logo" alt="logo" />
+                                            <p>
+                                                Team Casual<br />
+                                                <small>Welcome {user.attributes.email}</small>
+                                            </p>
+                                        </header>
+                                    </Route>
 
-                  <div className="login">
-                    <Route exact path="/login">
-                      <Login user={user} />
-                    </Route>
-                  </div>
-                </>
-              }
+                                    <Route exact path="/dnd">
+                                        <div>DnD</div>
+                                    </Route>
 
-            </Switch>
-          </Col>
-        </Row>
-      </Router>
-    </>
-  );
+                                    <Route exact path="/minecraft">
+                                        <Minecraft />
+                                    </Route>
+                                </>
+                            }
+
+                            {user === null &&
+                                <>
+                                    <Route path="">
+                                        <Redirect to="/login" />
+                                    </Route>
+
+                                    <div className="login">
+                                        <Route exact path="/login">
+                                            <Login user={user} />
+                                        </Route>
+                                    </div>
+                                </>
+                            }
+
+                        </Switch>
+                    </Col>
+                </Row>
+            </Router>
+        </>
+    );
 }
 
 export default App;

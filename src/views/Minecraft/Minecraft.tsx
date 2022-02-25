@@ -41,7 +41,7 @@ const Minecraft = () => {
 
     return (
         <>
-            {servers  &&
+            {servers &&
                 <>
                     {servers.stopped.map(s => s.serverName)}
                 </>
