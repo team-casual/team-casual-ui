@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { API, Auth } from 'aws-amplify';
+import { MinecraftServer, RunningServer } from "../../models/Minecraft/MinecraftServer";
 
 export interface MinecraftProps {
     user: any
 }
 
-export type RunningServer = {
-    serverName: "string"
-}
-
-export type StoppedServer = {
-    serverName: "string"
-}
-
-export type TServers = {
-    stopped: StoppedServer[],
+export type ListServersResponse = {
+    stopped: MinecraftServer[],
     running: RunningServer[]
 }
 
 const Minecraft = () => {
-    const [servers, setServers] = useState<TServers | null>(null);
+    const [servers, setServers] = useState<ListServersResponse | null>(null);
 
     useEffect(() => {
         const getData = async () => {
