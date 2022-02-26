@@ -60,12 +60,12 @@ function App() {
                                         </header>
                                     </Route>
 
-                                    <Route exact path="/dnd">
+                                    <Route path="/dnd">
                                         <div>DnD</div>
                                     </Route>
 
-                                    <Route exact path="/minecraft">
-                                        <Minecraft />
+                                    <Route path="/Minecraft">
+                                        <Minecraft baseUrl="/Minecraft" />
                                     </Route>
                                 </>
                             }
