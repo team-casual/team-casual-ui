@@ -2,14 +2,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
-import Amplify from "aws-amplify";
-import config from "./aws-exports";
+import Amplify, { API, Auth } from 'aws-amplify';
+import awsmobile from "./aws-exports";
 import App from './App';
 
 import './index.scss';
 import "react-toastify/dist/ReactToastify.css";
 
-Amplify.configure(config);
+Amplify.configure(awsmobile);
+API.configure({
+  endpoints: [
+      {
+          name: "team_casual", // name of the API in API Gateway console
+          endpoint: "https://vsq5ldzl04.execute-api.eu-west-2.amazonaws.com/dev",
+          region: "eu-west-2",
+          paths: ['/minecraft/servers']
+      }
+  ]
+});
+Auth.configure(awsmobile);
 
 ReactDOM.render(
   <React.StrictMode>
