@@ -3,13 +3,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import Amplify, { API, Auth } from 'aws-amplify';
-import awsmobile from "./aws-exports";
+import awsconfig from "./aws-exports";
 import App from './App';
 
 import './index.scss';
 import "react-toastify/dist/ReactToastify.css";
 
-Amplify.configure(awsmobile);
+Amplify.configure(awsconfig);
 API.configure({
   endpoints: [
       {
@@ -20,7 +20,7 @@ API.configure({
       }
   ]
 });
-Auth.configure(awsmobile);
+Auth.configure(awsconfig);
 
 ReactDOM.render(
   <React.StrictMode>
