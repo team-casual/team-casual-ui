@@ -3,7 +3,8 @@ export interface MinecraftServer {
     serverType: "vanilla" | "modded",
     minecraftVersion: string,
     availabilityZone: string,
-    instanceState: string
+    instanceState: string,
+    instanceId: string
 }
 
 export interface RunningServer extends MinecraftServer {

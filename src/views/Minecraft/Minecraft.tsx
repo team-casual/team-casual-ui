@@ -18,7 +18,7 @@ export type ListServersResponse = {
 }
 
 const Minecraft = (props: MinecraftProps) => {
-    const [servers, setServers] = useState<ListServersResponse | null>(null);
+    const [servers, setServers] = useState<ListServersResponse>({stopped: [], running: []});
 
     const getData = async () => {
         try {
@@ -41,28 +41,74 @@ const Minecraft = (props: MinecraftProps) => {
         }
     }
 
-    const startServer = async (serverName: string) => {
-        console.error("not implemented");
-        
-        // try {
+    const startServer = async (serverId: string) => {
+        try {
+            const user = await Auth.currentAuthenticatedUser();
 
-        //     const user = await Auth.currentAuthenticatedUser();
+            const apiName = "team_casual";
+            const path = `/minecraft/servers/start?instanceId=${serverId}`;
+            const init = {
+                headers: {
+                    Authorization: `Bearer ${user.signInUserSession.idToken.jwtToken}`, // get jwtToken
+                }
+            };
 
-        //     const apiName = "team_casual";
-        //     const path = `/minecraft/servers/start?serverName=${serverName}`;
-        //     const init = {
-        //         headers: {
-        //             Authorization: `Bearer ${user.signInUserSession.idToken.jwtToken}`, // get jwtToken
-        //         }
-        //     };
+            const stoppedServers = servers.stopped;
+            stoppedServers.forEach(s => {
+                if (s.instanceId === serverId) {
+                    s.instanceState = "pending";
+                }
+            });
 
-        //     const response = await API.post(apiName, path, init);
+            setServers({
+                running: [...servers.running],
+                stopped: [...stoppedServers]
+            });
 
-        //     await getData();
-        // }
-        // catch (e) {
-        //     console.error(e);
-        // }
+            const response = await API.get(apiName, path, init);
+            console.log(response);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        finally {
+            await getData();
+        }
+    };
+
+    const stopServer = async (serverId: string) => {
+        try {
+            const user = await Auth.currentAuthenticatedUser();
+
+            const apiName = "team_casual";
+            const path = `/minecraft/servers/stop?instanceId=${serverId}`;
+            const init = {
+                headers: {
+                    Authorization: `Bearer ${user.signInUserSession.idToken.jwtToken}`, // get jwtToken
+                }
+            };
+
+            const runningServers = servers.running;
+            runningServers.forEach(s => {
+                if (s.instanceId === serverId) {
+                    s.instanceState = "stopping";
+                }
+            });
+
+            setServers({
+                running: [...runningServers],
+                stopped: [...servers.stopped]
+            });
+
+            const response = await API.get(apiName, path, init);
+            console.log(response);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        finally {
+            await getData();
+        }
     };
 
     useEffect(() => {
@@ -117,6 +163,7 @@ const Minecraft = (props: MinecraftProps) => {
                                                     <td>{s.instanceState}</td>
                                                     <td>{s.publicDnsName}</td>
                                                     <td>{s.publicIpAddress}</td>
+                                                    <td><Button onClick={() => stopServer(s.instanceId)}>Stop</Button></td>
                                                 </tr>
                                             );
                                         })}
@@ -135,7 +182,7 @@ const Minecraft = (props: MinecraftProps) => {
                                                     <td>{s.instanceState}</td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td><Button onClick={() => startServer(s.serverName)}>Start</Button></td>
+                                                    <td><Button onClick={() => startServer(s.instanceId)}>Start</Button></td>
                                                 </tr>
                                             );
                                         })}
